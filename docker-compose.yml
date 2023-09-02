@@ -1,0 +1,62 @@
+version: "3.9"
+services:
+  nginx:
+    image: ghcr.io/finwave-app/nginx:1.0.0
+    depends_on:
+      - frontend
+      - backend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/custom-http.d:/etc/nginx/custom-http.d
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      fwnet:
+          aliases:
+            - nginx
+  frontend:
+    image: ghcr.io/finwave-app/frontend:0.1.0
+    environment:
+      NUXT_PUBLIC_API_URL: ${API_URL}
+    restart: unless-stopped
+    ports:
+      - "3000"
+    networks:
+      fwnet:
+          aliases:
+            - frontend
+  backend:
+    image: ghcr.io/finwave-app/backend:0.1.2
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+    restart: unless-stopped
+    ports:
+      - "8080"
+    volumes:
+      - ./backend/configs:/finwave/configs
+      - ./backend/logs:/finwave/logs
+    networks:
+      fwnet:
+          aliases:
+            - backend
+  postgres:
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "finwave"
+      POSTGRES_USER: "finwave"
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ./database:/var/lib/postgresql/data
+    restart: unless-stopped
+    ports:
+      - "5432"
+    networks:
+     fwnet:
+       aliases:
+         - postgres
+networks:
+  fwnet:
