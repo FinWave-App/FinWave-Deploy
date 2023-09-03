@@ -16,7 +16,7 @@ services:
           aliases:
             - nginx
   frontend:
-    image: ghcr.io/finwave-app/frontend:0.1.0
+    image: ghcr.io/finwave-app/frontend:0.1.1
     environment:
       NUXT_PUBLIC_API_URL: ${API_URL}
     restart: unless-stopped
@@ -27,7 +27,7 @@ services:
           aliases:
             - frontend
   backend:
-    image: ghcr.io/finwave-app/backend:0.1.2
+    image: ghcr.io/finwave-app/backend:0.2.0
     depends_on:
       - postgres
     environment:
