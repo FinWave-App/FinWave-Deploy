@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   nginx:
-    image: ghcr.io/finwave-app/nginx:1.0.0
+    image: ghcr.io/finwave-app/nginx:latest
     depends_on:
       - frontend
       - backend
@@ -16,7 +16,7 @@ services:
           aliases:
             - nginx
   frontend:
-    image: ghcr.io/finwave-app/frontend:0.10.0
+    image: ghcr.io/finwave-app/frontend:latest
     environment:
       NUXT_PUBLIC_API_URL: ${API_URL}
     restart: unless-stopped
@@ -27,7 +27,7 @@ services:
           aliases:
             - frontend
   backend:
-    image: ghcr.io/finwave-app/backend:0.10.0
+    image: ghcr.io/finwave-app/backend:latest
     depends_on:
       - postgres
     environment:
@@ -51,6 +51,11 @@ services:
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
       - ./database:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U finwave -d finwave
+      interval: 10s
+      timeout: 3s
+      retries: 5
     restart: unless-stopped
     ports:
       - "5432"

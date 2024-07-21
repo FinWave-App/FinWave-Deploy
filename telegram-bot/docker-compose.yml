@@ -1,0 +1,39 @@
+version: "3.9"
+services:
+  bot:
+    image: ghcr.io/finwave-app/telegram-bot:latest
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+    restart: unless-stopped
+    volumes:
+      - ./bot/configs:/finwave-bot/configs
+      - ./bot/logs:/finwave-bot/logs
+    networks:
+      fwbnet:
+          aliases:
+            - bot
+  postgres:
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "finwavebot"
+      POSTGRES_USER: "finwavebot"
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ./database:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U finwavebot -d finwavebot
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+    ports:
+      - "5432"
+    networks:
+     fwbnet:
+       aliases:
+         - postgres
+networks:
+  fwbnet:
