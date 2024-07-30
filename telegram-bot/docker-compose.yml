@@ -6,6 +6,7 @@ services:
       - postgres
     environment:
       DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      JAVA_OPTS: ${JAVA_OPTS}
     restart: unless-stopped
     volumes:
       - ./bot/configs:/finwave-bot/configs
