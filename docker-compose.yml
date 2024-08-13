@@ -33,6 +33,7 @@ services:
     environment:
       DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
       JAVA_OPTS: ${JAVA_OPTS}
+      API_URL: ${API_URL}
     restart: unless-stopped
     ports:
       - "8080"
