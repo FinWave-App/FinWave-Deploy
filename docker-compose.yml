@@ -40,6 +40,7 @@ services:
     volumes:
       - ./backend/configs:/finwave/configs
       - ./backend/logs:/finwave/logs
+      - ./backend/files:/finwave/files
     networks:
       fwnet:
           aliases:
