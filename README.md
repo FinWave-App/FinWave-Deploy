@@ -12,7 +12,15 @@ echo https://domain.name/api/ > api_url
 sudo ./start.sh
 ```
 
-After downloading the containers, FinWave should start
+After downloading the containers, FinWave should start. 
+
+### Default credentials
+
+Username: `root`
+
+Password: `change_me`
+
+**Please ensure to update your root password after the first login for security reasons.**
 
 ## About the file structure
 ### api_url file
