@@ -25,7 +25,12 @@ fi
 
 POSTGRES_PASSWORD=$(cat /dev/urandom | tr -dc '[:alpha:]' | fold -w ${1:-30} | head -n 1)
 
-POSTGRES_PASSWORD=$POSTGRES_PASSWORD API_URL=$API_URL JAVA_OPTS=$JAVA_OPTS docker-compose up -d
+DOCKER_COMPOSE_CMD="docker-compose"
+if ! command -v $DOCKER_COMPOSE_CMD &> /dev/null; then
+  DOCKER_COMPOSE_CMD="docker compose"
+fi
+
+POSTGRES_PASSWORD=$POSTGRES_PASSWORD API_URL=$API_URL JAVA_OPTS=$JAVA_OPTS $DOCKER_COMPOSE_CMD up -d
 
 if [[ $? -eq 0 ]]; then
   echo -e "\nFinWave start complited.\nDocker Compose should automatically start containers after system reboot."
